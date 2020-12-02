@@ -1,13 +1,13 @@
 <?php 
   include_once('./controller/ClientController.php');
   include_once('./middlewares/permission.php');
-  include_once('./middlewares/auth.php');
+  include_once('./middlewares/auth-client.php');
 
   function get($resources, $id = null) {
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }
@@ -51,8 +51,8 @@
   function delete ($resources, $id) {
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }

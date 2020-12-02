@@ -20,15 +20,3 @@
       header('HTTP/1.1 400');
     }
   }
-
-  function delete() {
-    $auth = auth();
-
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
-      header('HTTP/1.1 401');
-      return;
-    }
-
-    destroy();
-  }

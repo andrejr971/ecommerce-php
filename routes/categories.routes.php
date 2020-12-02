@@ -6,13 +6,13 @@
   function get($resources, $id = null) {
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }
 
-    $permission = permission();
+    $permission = permission($auth);
 
     if (isset($permission)) {
       echo json_encode(['status' => 401, 'error' => $permission['error']['message']]);
@@ -42,13 +42,13 @@
   function post ($resources) {
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }
 
-    $permission = permission();
+    $permission = permission($auth);
 
     if (isset($permission)) {
       echo json_encode(['status' => 401, 'error' => $permission['error']['message']]);
@@ -66,13 +66,13 @@
   function put ($resources, $id) {
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }
 
-    $permission = permission();
+    $permission = permission($auth);
 
     if (isset($permission)) {
       echo json_encode(['status' => 401, 'error' => $permission['error']['message']]);
@@ -95,13 +95,13 @@
   function delete ($resources, $id) {
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }
 
-    $permission = permission();
+    $permission = permission($auth);
 
     if (isset($permission)) {
       echo json_encode(['status' => 401, 'error' => $permission['error']['message']]);

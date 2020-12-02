@@ -6,13 +6,13 @@
   function get() {
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }
 
-    $user = show();
+    $user = show($auth->id);
 
     echo json_encode($user);
   }
@@ -20,15 +20,15 @@
   function put($resources) {
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $user = update($data);
+    $user = update($data, $auth->id);
 
     echo json_encode($user);
   }
@@ -42,15 +42,15 @@
 
     $auth = auth();
 
-    if (isset($auth['error'])) {
-      echo json_encode(['status' => 401, 'error' => $auth['error']['message']]);
+    if (isset($auth->error)) {
+      echo json_encode(['status' => 401, 'error' => $auth->error->message]);
       header('HTTP/1.1 401');
       return;
     }
 
     $data = $_FILES['file'];
 
-    $user = store($data);
+    $user = store($data, $auth->id);
 
     echo json_encode($user);
   }

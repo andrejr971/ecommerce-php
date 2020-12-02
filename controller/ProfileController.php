@@ -1,11 +1,11 @@
 <?php
   include_once('./database/index.php');
 
-  function show() {
+  function show($id) {
     $sql = "SELECT * FROM users WHERE id = :id";
 
     $results = Database()->prepare($sql);
-    $results->bindValue(':id', $_SESSION['session']['id']);
+    $results->bindValue(':id', $id);
     $results->execute();
 
     $obj_user = $results->fetchAll(PDO::FETCH_OBJ)[0];
@@ -24,7 +24,7 @@
     return $user;
   }
 
-  function update($request) {
+  function update($request, $id) {
     if (isset($request->password) && !isset($request->password_confirmation)) {
       return [
         'error' => [
@@ -55,15 +55,10 @@
     }
 
     $results->bindValue(':updated_at', date('Y-m-d H:i:s'));
-    $results->bindValue(':id', $_SESSION['session']['id']);
+    $results->bindValue(':id', $id);
     $results->execute();
 
-    $user = [
-      'id' => intval($_SESSION['session']['id']),
-      'name' => $request->name,
-      'email' => $request->email,
-      'permission' => $_SESSION['session']['permission'],
-    ];
+    $user = show($id);
 
     return $user;
   }

@@ -1,4 +1,6 @@
 <?php
+  use \Firebase\JWT\JWT;
+
   include_once('./database/index.php');
 
   function store($request) {
@@ -39,19 +41,22 @@
       ];
     }
 
-    $_SESSION['session-client'] = [
-      'id' => $client[0]->id
+    $key = '1f8dff82dda0cd1fade43dbe310cd7d0';
+
+    $payload = [
+      "id" => $client[0]->id
     ];
+
+    $token = JWT::encode($payload, $key);
       
     return [
-      'id' => $client[0]->id,
-      'name' => $client[0]->name,
-      'email' => $client[0]->email,
-      'avatar_url' => $client[0]->avatar ? "http://localhost/aula-php/aplicacoes/api/backend/tmp/{$client[0]->avatar}" : null,
-      'created_at' => $client[0]->created_at,
+      'user' => [
+        'id' => $client[0]->id,
+        'name' => $client[0]->name,
+        'email' => $client[0]->email,
+        'avatar_url' => $client[0]->avatar ? "http://localhost/aula-php/aplicacoes/api/backend/tmp/{$client[0]->avatar}" : null,
+        'created_at' => $client[0]->created_at,
+      ],
+      'token' => $token
     ]; 
-  }
-
-  function destroy() {
-    unset($_SESSION['session-client']);
   }

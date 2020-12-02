@@ -1,6 +1,6 @@
 <?php
-  function permission() {
-    if($_SESSION['session']['permission'] === '0') {
+  function permission($auth) {
+    if($auth->permission === '0') {
       return [
         'error' => [
           'message' => 'Not authorized',

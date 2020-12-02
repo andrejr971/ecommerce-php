@@ -11,7 +11,7 @@
 
     foreach ($results->fetchAll(PDO::FETCH_OBJ) as $user) {
       $users[] = [
-        'id' => intval($user->id),
+        'id' => $user->id,
         'username' => $user->username,
         'name' => $user->name,
         'email' => $user->email,

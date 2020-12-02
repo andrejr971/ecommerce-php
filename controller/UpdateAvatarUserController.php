@@ -1,7 +1,7 @@
 <?php 
   include_once('./database/index.php');
 
-  function store($request) {
+  function store($request, $id) {
     $filename = MD5($request['name']) . rand(0, 9999);
     $type = substr($request['name'], -4);
     
@@ -17,13 +17,13 @@
     $results = Database()->prepare($sql);
     $results->bindValue(':avatar', $avatar);
     $results->bindValue(':updated_at', date('Y-m-d H:i:s'));
-    $results->bindValue(':id', $_SESSION['session']['id']);
+    $results->bindValue(':id', $id);
     $results->execute();
 
     $sql = "SELECT * FROM users WHERE id = :id";
 
     $results = Database()->prepare($sql);
-    $results->bindValue(':id', $_SESSION['session']['id']);
+    $results->bindValue(':id', $id);
     $results->execute();
 
     $obj_user = $results->fetchAll(PDO::FETCH_OBJ)[0];
