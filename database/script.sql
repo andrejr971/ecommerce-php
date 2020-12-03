@@ -242,8 +242,3 @@ ALTER TABLE `product_images`
 	ON DELETE CASCADE ON UPDATE CASCADE; 
 
 
-
-
-
-  
-    

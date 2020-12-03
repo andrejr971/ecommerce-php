@@ -41,7 +41,7 @@
     $results->bindValue(':id', $id);
     $results->execute();
 
-    $relations[] = $results->fetchAll(PDO::FETCH_OBJ);
+    $relations = $results->fetchAll(PDO::FETCH_OBJ);
     
 
     return [
@@ -97,11 +97,12 @@
 
     $name = $request->name;
 
-    $sql = "UPDATE products set name = :name, updated_at = :updated_at";
+    $sql = "UPDATE products set name = :name, updated_at = :updated_at WHERE id = :id";
 
     $results = Database()->prepare($sql);    
     $results->bindValue(':name', $name);
     $results->bindValue(':updated_at', $date);
+    $results->bindValue(':id', $id);
 
     if (!$results->execute()) {
       return [

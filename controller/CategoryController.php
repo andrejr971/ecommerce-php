@@ -64,13 +64,14 @@
     $date = date('Y-m-d H:i:s');
 
     $name = $request->name;
-    $description = $request->description || null;
+    $description = $request->description;
 
-    $sql = "UPDATE categories set name = :name, description = :description,  updated_at = :updated_at";
+    $sql = "UPDATE categories set name = :name, description = :description,  updated_at = :updated_at WHERE id = :id";
 
     $results = Database()->prepare($sql);    
     $results->bindValue(':name', $name);
     $results->bindValue(':description', $description);
+    $results->bindValue(':id', $id);
     $results->bindValue(':updated_at', $date);
 
     if (!$results->execute()) {
