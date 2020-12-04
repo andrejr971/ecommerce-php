@@ -13,7 +13,8 @@
       'clients',
       'session-client',
       'profile-client',
-      'cart'];
+      'cart'
+    ];
     
     if (in_array($method, $methodPermited)) {
       if (in_array($resource[0], $resourcePermited)) {   

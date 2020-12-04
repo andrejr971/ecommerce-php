@@ -2,7 +2,7 @@
   use \Firebase\JWT\JWT;
 
   function auth() {
-    $headers = apache_request_headers()['authorization'];
+    $headers = apache_request_headers()['Authorization'];
 
     $token = explode(' ', $headers);
 

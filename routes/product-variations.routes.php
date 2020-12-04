@@ -23,7 +23,7 @@
     echo json_encode($categories);
   }
 
-  function post($resources, $id = null) {
+  function post($resources, $id = null, ...$rest) {
     $auth = auth();
 
     if (isset($auth->error)) {
@@ -51,17 +51,23 @@
       $files[] = (Object) $file;
     }
 
-    $data = (Object) [
-      'name' => $_POST['name'],
-      'slug' => $_POST['slug'],
-      'price' => $_POST['price'],
-      'description' => $_POST['description'],
-      'sizes' => explode(',', $_POST['sizes']),
-      'quantity' => explode(',', $_POST['quantity']),
-      'files' => $files
-    ];
+    
+    if (isset($_POST['name'])) {
+      $data = (Object) [
+        'name' => $_POST['name'],
+        'slug' => $_POST['slug'],
+        'price' => $_POST['price'],
+        'description' => $_POST['description'],
+        'sizes' => explode(',', $_POST['sizes']),
+        'quantity' => explode(',', $_POST['quantity']),
+        'files' => $files
+      ];
 
-    $product = store($data, $id);
+      $product = store($data, $id);
+    } else {
+      $product = store($_FILES, $rest[1], 'image');
+    }
+
 
     echo json_encode($product);
   }

@@ -79,7 +79,7 @@ CREATE TABLE products (
 	`id` int UNSIGNED NOT NULL,
     `category_id` int UNSIGNED,
     `brand_id` int UNSIGNED,
-    `discount` decimal (2,2) NULL,
+    `discount` decimal (5,2) NULL,
 	`created_at` datetime DEFAULT NULL,
 	`updated_at` datetime DEFAULT NULL
 );
@@ -198,9 +198,10 @@ ALTER TABLE `cart`
 */
 CREATE TABLE cart_items (
 	`id` int UNSIGNED NOT NULL,
-    `cart_id` int UNSIGNED,
-    `product_variation_id` int UNSIGNED,
-    `quantity_id` int NOT NULL,
+  `cart_id` int UNSIGNED,
+  `product_variation_id` int UNSIGNED,
+  `size_id` int UNSIGNED,
+  `quantity` int NOT NULL,
 	`created_at` datetime DEFAULT NULL,
 	`updated_at` datetime DEFAULT NULL
 ); 
@@ -208,16 +209,19 @@ CREATE TABLE cart_items (
 ALTER TABLE `cart_items`
   ADD PRIMARY KEY (`id`),
   ADD KEY `product_variation_cart_items_id_foreign` (`product_variation_id`),
-  ADD KEY `cart_id_foreign` (`cart_id`);
+  ADD KEY `cart_id_foreign` (`cart_id`),
+  ADD KEY `size_id_foreign` (`size_id`);
 
 ALTER TABLE `cart_items`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `cart_items`
   ADD CONSTRAINT `product_variation_cart_items_id_foreign` FOREIGN KEY (`product_variation_id`) REFERENCES `product_variations` (`id`) 
-	ON DELETE SET NULL ON UPDATE CASCADE,
+	  ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `cart_id_foreign` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`) 
-	ON DELETE CASCADE ON UPDATE CASCADE; 
+	  ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `size_id_foreign` FOREIGN KEY (`size_id`) REFERENCES `product_sizes` (`id`) 
+	  ON DELETE CASCADE ON UPDATE CASCADE;
     
 /*
 * table product size
@@ -240,5 +244,33 @@ ALTER TABLE `product_images`
 ALTER TABLE `product_images`
   ADD CONSTRAINT `product_variation_id_product_images_foreign` FOREIGN KEY (`product_variation_id`) REFERENCES `product_variations` (`id`) 
 	ON DELETE CASCADE ON UPDATE CASCADE; 
+
+
+/*
+* table comments
+*/
+CREATE TABLE comments (
+	`id` int UNSIGNED NOT NULL,
+  `comment` text NOT NULL,
+  `client_id` int UNSIGNED,
+  `product_variation_id` int UNSIGNED,
+	`created_at` datetime DEFAULT NULL,
+	`updated_at` datetime DEFAULT NULL
+); 
+
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `clien_comments_id_foreign` (`client_id`),
+  ADD KEY `product_variation_comments_id_foreign` (`product_variation_id`);
+
+ALTER TABLE `comments`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `comments`
+  ADD CONSTRAINT `clien_comments_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) 
+	ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `product_variation_comments_id_foreign` FOREIGN KEY (`product_variation_id`) REFERENCES `product_variations` (`id`) 
+	ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 

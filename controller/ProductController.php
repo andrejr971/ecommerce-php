@@ -47,6 +47,7 @@
     return [
       'id' => $obj_product[0]->id,
       'name' => $obj_product[0]->name,
+      'discount' => $obj_product[0]->discount,
       'category' => [
         'id' => $obj_product[0]->category_id,
         'name' => $obj_product[0]->category_name,
@@ -99,8 +100,16 @@
 
     $sql = "UPDATE products set name = :name, updated_at = :updated_at WHERE id = :id";
 
+    if ($request->discount) {
+      $sql = "UPDATE products set name = :name, discount = :discount, updated_at = :updated_at WHERE id = :id";
+    }
+    
+    
     $results = Database()->prepare($sql);    
     $results->bindValue(':name', $name);
+    if ($request->discount) {
+      $results->bindValue(':discount', $request->discount);
+    }
     $results->bindValue(':updated_at', $date);
     $results->bindValue(':id', $id);
 
