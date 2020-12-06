@@ -94,6 +94,8 @@
     $results->bindValue(':id', $obj_product[0]->product_id);
     $results->execute();
 
+    $outhers = [];
+
     foreach ($results->fetchAll(PDO::FETCH_OBJ) as $variation) {
       $sql = 'SELECT * FROM product_images WHERE product_variation_id = :id';
       $product_images = Database()->prepare($sql);
@@ -126,7 +128,7 @@
     ];
   }
 
-  function store($request, $id, $options, $product_id) {
+  function store($request, $id = null, $options = null, $product_id = null) {
     if ($options === 'image') {
       return updateImage($request['image'], $id, $product_id);
     }
