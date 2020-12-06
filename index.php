@@ -29,7 +29,6 @@
     $url = trim($_GET['url'], '/');
     $url = explode('/', $url);
     $method = $_SERVER['REQUEST_METHOD'];
-
     routes($method, $url);    
   } else {
     echo (json_encode(array('status' => 404, 'data' => 'Not Found')));

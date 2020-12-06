@@ -3,13 +3,15 @@
   include_once('./controller/UpdateImageProduct.php');
 
   function index() {
-    $sql = 'SELECT * FROM product_variations';
+    $sql = 'SELECT product_variations.*, products.discount AS discount FROM product_variations LEFT JOIN products ON products.id = product_variations.product_id';
     $results = Database()->prepare($sql);
     $results->execute();
 
     $products = [];
 
     foreach ($results->fetchAll(PDO::FETCH_OBJ) as $product) {
+      $images = [];
+      
       $sql = 'SELECT * FROM product_images WHERE product_variation_id = :id';
       $product_images = Database()->prepare($sql);
       $product_images->bindValue(':id', $product->id);
@@ -29,6 +31,7 @@
         'slug' => $product->slug,
         'description' => $product->description,
         'price' => $product->price,
+        'discount' => $product->discount,
         'created_at' => $product->created_at,
         'updated_at' => $product->updated_at,
         'images' => $images,
@@ -73,7 +76,7 @@
       ];
     }
 
-    $sql = 'SELECT * FROM product_sizes WHERE product_variation_id = :id';
+    $sql = 'SELECT * FROM product_sizes WHERE product_variation_id = :id ORDER BY size ASC';
     $product_sizes = Database()->prepare($sql);
     $product_sizes->bindValue(':id', $obj_product[0]->id);
     $product_sizes->execute();
@@ -123,9 +126,9 @@
     ];
   }
 
-  function store($request, $id, $options) {
+  function store($request, $id, $options, $product_id) {
     if ($options === 'image') {
-      return updateImage($request['image'], $id);
+      return updateImage($request['image'], $id, $product_id);
     }
 
     $date = date('Y-m-d H:i:s');

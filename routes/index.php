@@ -13,13 +13,15 @@
       'clients',
       'session-client',
       'profile-client',
-      'cart'
+      'cart',
+      'comments',
+      'search'
     ];
     
     if (in_array($method, $methodPermited)) {
       if (in_array($resource[0], $resourcePermited)) {   
         if(file_exists("./routes/{$resource[0]}.routes.php")) {
-          include_once("./routes/{$resource[0]}.routes.php");
+          include_once("./routes/{$resource[0]}.routes.php");          
           call_user_func_array($method, $resource);
         } else {
           echo (json_encode(array('status' => 404, 'data' => 'Not Found')));

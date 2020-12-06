@@ -12,7 +12,7 @@
     }
 
     if ($id) {
-      $cart = show($id);
+      $cart = show($auth->id);
 
       if (isset($cart['error'])) {
         echo json_encode(['status' => 400, 'error' => $cart['error']['message']]);
@@ -47,7 +47,7 @@
     echo json_encode($cart);
   }
 
-  function put($resources, $id, ...$rest) {
+  function put($resources, ...$rest) {
     $auth = auth();
 
     if (isset($auth->error)) {
@@ -56,7 +56,7 @@
       return;
     }
 
-    $cart = update($rest, $id);
+    $cart = update($rest);
 
     echo json_encode($cart);
   }

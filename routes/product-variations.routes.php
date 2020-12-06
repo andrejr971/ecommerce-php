@@ -65,7 +65,7 @@
 
       $product = store($data, $id);
     } else {
-      $product = store($_FILES, $rest[1], 'image');
+      $product = store($_FILES, $rest[1] ?? null, 'image', $id);
     }
 
 

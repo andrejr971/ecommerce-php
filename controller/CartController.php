@@ -15,16 +15,25 @@
   function show($id) {
     $connection = Database();
 
+    $sql = "SELECT * FROM cart WHERE client_id = :id AND status = '0' ORDER BY id DESC LIMIT 1";
+
+    $carts = $connection->prepare($sql);
+    $carts->bindValue(':id', $id);
+    $carts->execute();
+
+    $cart = $carts->fetchAll(PDO::FETCH_OBJ)[0];
+
     $sql = "SELECT * FROM cart_items WHERE cart_id = :id";
 
     $items = $connection->prepare($sql);
-    $items->bindValue(':id', $id);
+    $items->bindValue(':id', $cart->id);
     $items->execute();
 
     $data = [];
 
     foreach ($items->fetchAll(PDO::FETCH_OBJ) as $item) {
-      $sql = "SELECT * FROM product_variations WHERE id = :id LIMIT 1";
+      $sql = "SELECT product_variations.*, products.discount AS discount FROM product_variations 
+        LEFT JOIN products ON products.id = product_variations.product_id WHERE product_variations.id = :id LIMIT 1";
 
       $product = $connection->prepare($sql);
       $product->bindValue(':id', $item->product_variation_id);
@@ -55,6 +64,8 @@
         'slug' => $product->slug,
         'quantity' => $item->quantity,
         'size' => $size->size,
+        'price' => $product->price,
+        'discount' => $product->discount,
         'image_url' => "http://localhost/aula-php/aplicacoes/api/backend/tmp/products/{$image->path}",
       ];
     }
@@ -128,12 +139,58 @@
       ];
     }
 
-    $cart = show(($cart->id));
+    $sql = "SELECT * FROM cart_items WHERE id = :id";
 
-    return $cart;
+    $items = $connection->prepare($sql);
+    $items->bindValue(':id', $connection->lastInsertId());
+    $items->execute();
+
+    $data = [];
+
+    $item = $items->fetchAll(PDO::FETCH_OBJ)[0];
+    
+    $sql = "SELECT product_variations.*, products.discount AS discount FROM product_variations 
+      LEFT JOIN products ON products.id = product_variations.product_id WHERE product_variations.id = :id LIMIT 1";
+
+    $product = $connection->prepare($sql);
+    $product->bindValue(':id', $item->product_variation_id);
+    $product->execute();
+
+    $product = $product->fetchAll(PDO::FETCH_OBJ)[0];
+
+    $sql = "SELECT * FROM product_sizes WHERE id = :id LIMIT 1";
+
+    $size = $connection->prepare($sql);
+    $size->bindValue(':id', $item->size_id);
+    $size->execute();
+
+    $size = $size->fetchAll(PDO::FETCH_OBJ)[0];
+
+    $sql = "SELECT * FROM product_images WHERE product_variation_id = :id LIMIT 1";
+
+    $image = $connection->prepare($sql);
+    $image->bindValue(':id', $item->product_variation_id);
+    $image->execute();
+
+    $image = $image->fetchAll(PDO::FETCH_OBJ)[0];
+
+    $data = [
+      'id' => $item->id,
+      'product_id' => $product->id,
+      'name' => $product->name,
+      'slug' => $product->slug,
+      'quantity' => $item->quantity,
+      'size' => $size->size,
+      'price' => $product->price,
+      'discount' => $product->discount,
+      'image_url' => "http://localhost/aula-php/aplicacoes/api/backend/tmp/products/{$image->path}",
+    ];
+    
+
+    return $data;
   }
 
-  function update($option, $id) {
+  function update($option) {
     $cart_id = $option[1];
     
     $connection = Database();
