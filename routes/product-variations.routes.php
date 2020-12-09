@@ -96,7 +96,7 @@
       
       echo json_encode($product);
     } else {
-      echo json_encode(array('status' => 422, 'message' => 'Failed to register new product'));
+      echo json_encode(array('status' => 422, 'message' => 'Failed to update new product'));
       header('HTTP/1.1 422');
     }
   }

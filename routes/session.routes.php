@@ -15,6 +15,7 @@
       }
 
       echo json_encode($session);
+      
     } else {
       echo json_encode(array('status' => 400, 'message' => 'Email or password incorrected'));
       header('HTTP/1.1 400');

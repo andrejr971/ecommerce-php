@@ -15,11 +15,20 @@
       ];
     }
 
+    $connection = Database();
+
     $sql = "SELECT * FROM users WHERE username = :username";
 
-    $results = Database()->prepare($sql);
+    $results = $connection->prepare($sql);
     $results->bindValue(':username', $username);
-    $results->execute();
+
+    if (!$results->execute()) {
+      return [
+        'error' => [
+          'message' => $results->errorInfo()
+        ]
+      ];
+    }
 
     $user = $results->fetchAll(PDO::FETCH_OBJ);
 
